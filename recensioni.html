@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recensioni — Bar Panineria Rocca</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;800&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#000000; --bg-alt:#141414; --bg-alt2:#1c1c1c;
+  --ink:#f5f5f5; --muted:#b0b0b0; --muted-dim:#8a8a8a;
+  --ember:#f5f5f5; --ember-bright:#dcdcdc; --gold:#d4d4d4;
+  --line:rgba(245,245,245,.14);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:'Work Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased;}
+.wrap{max-width:1100px; margin:0 auto; padding-inline:24px;}
+img{max-width:100%;}
+h1,h2,h3{font-family:'Libre Franklin', system-ui, sans-serif; font-weight:800; text-transform:uppercase; text-wrap:balance; margin:0;}
+p{margin:0;}
+a{color:inherit;}
+.eyebrow{font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+.eyebrow::before{content:""; width:24px; height:1px; background:var(--gold);}
+
+.nav{position:sticky; top:0; z-index:50; background:rgba(10,10,10,.82); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+.nav .wrap{display:flex; align-items:center; justify-content:space-between; padding-block:14px; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px; text-decoration:none; transition:opacity .25s ease;}
+.logo:hover{opacity:.82;}
+.logo img.logo-icon{height:36px; width:auto; display:block; transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.logo:hover img.logo-icon{transform:rotate(-8deg) scale(1.06);}
+.logo img.logo-word{height:16px; width:auto; display:block;}
+.nav-links{display:flex; gap:24px; list-style:none; margin:0; padding:0; flex-wrap:wrap; justify-content:flex-end;}
+.nav-links a{position:relative; font-size:.85rem; color:var(--muted); text-decoration:none; transition:color .25s;}
+.nav-links a::after{content:""; position:absolute; left:0; right:100%; bottom:-4px; height:1px; background:var(--gold); transition:right .35s cubic-bezier(.16,1,.3,1);}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after, .nav-links a.active::after{right:0;}
+.nav-links a.active{color:var(--gold); font-weight:600;}
+@media (max-width:520px){ .nav-links{gap:12px;} .nav-links a{font-size:.72rem;} .logo img.logo-icon{height:28px;} .logo img.logo-word{height:12px;} }
+
+.page-banner{position:relative; overflow:hidden; padding-block:64px 48px; border-bottom:1px solid var(--line);}
+.page-banner::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(circle at 85% 0%, rgba(245,245,245,.05), transparent 55%), radial-gradient(circle at 5% 100%, rgba(245,245,245,.03), transparent 50%);
+}
+.page-banner .inner{position:relative; display:grid; grid-template-columns:1.3fr .7fr; gap:40px; align-items:end;}
+@media (max-width:760px){ .page-banner .inner{grid-template-columns:1fr;} }
+.page-banner h1{font-size:clamp(2.2rem,5.2vw,3.4rem); margin-bottom:14px;}
+.page-banner p.lede{color:var(--muted); font-size:1.02rem; max-width:52ch; line-height:1.6;}
+.back-link{display:inline-flex; align-items:center; gap:6px; font-size:.82rem; color:var(--muted-dim); text-decoration:none; margin-top:22px;}
+.back-link:hover{color:var(--gold);}
+
+.rating-stack{display:flex; flex-direction:column; gap:16px;}
+.rating-block{background:var(--bg-alt); border:1px solid var(--line); border-radius:20px; padding:26px; text-align:center; box-shadow:0 14px 34px rgba(0,0,0,.3); position:relative;}
+.rating-block .platform-label{font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-dim); margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:6px;}
+.rating-block .platform-label svg{width:13px; height:13px;}
+.rating-block .num{font-family:'Libre Franklin'; font-weight:800; font-size:3.2rem; color:var(--gold); line-height:1;}
+.rating-block .stars{color:var(--gold); letter-spacing:3px; font-size:1.1rem; margin-block:8px;}
+.rating-block .sub{color:var(--muted-dim); font-size:.82rem;}
+.rating-block--justeat{padding:20px 26px;}
+.rating-block--justeat .platform-label{color:#ff8a3d;}
+.rating-block--justeat .num{font-size:2.2rem;}
+.rating-block--justeat .stars{color:#ff8a3d; font-size:.95rem;}
+
+.reveal{
+  opacity:0; transform:translateY(26px);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+  transition-delay:calc(var(--i,0) * .09s);
+}
+.reveal.in-view{opacity:1; transform:translateY(0);}
+.reveal[data-dir="left"]{transform:translateX(-36px);}
+.reveal[data-dir="left"].in-view{transform:translateX(0);}
+.reveal[data-dir="right"]{transform:translateX(36px);}
+.reveal[data-dir="right"].in-view{transform:translateX(0);}
+@media (prefers-reduced-motion: reduce){ .reveal, .reveal[data-dir]{opacity:1; transform:none; transition-delay:0s;} }
+
+section{padding-block:72px;}
+
+.btn{display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:.88rem; letter-spacing:.03em; text-decoration:none; padding:14px 26px; border-radius:2px; transition:transform .3s cubic-bezier(.16,1,.3,1), background .25s, box-shadow .3s, border-color .25s, color .25s;}
+.btn{position:relative; overflow:hidden; isolation:isolate; border-radius:12px; padding:15px 28px;}
+.btn-primary{background:linear-gradient(180deg,#ffffff,#dcdcdc); color:#0a0a0a; box-shadow:0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.7);}
+.btn-primary::after{content:""; position:absolute; inset:0; background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.65) 48%, transparent 66%); transform:translateX(-120%); transition:transform .7s ease;}
+.btn-primary:hover{background:linear-gradient(180deg,#ffffff,#f2f2f2); transform:translateY(-3px); box-shadow:0 16px 34px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.85);}
+.btn-primary:hover::after{transform:translateX(120%);}
+.btn-ghost{background:rgba(245,245,245,.05); backdrop-filter:blur(8px); border:1.5px solid rgba(245,245,245,.24); color:var(--ink);}
+.btn-ghost:hover{background:rgba(245,245,245,.09); border-color:rgba(245,245,245,.55); color:#fff; transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,.35);}
+@media (prefers-reduced-motion: reduce){ .btn-primary::after{display:none;} }
+
+.reviews-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+@media (max-width:760px){ .reviews-grid{grid-template-columns:1fr;} }
+.review-card{
+  border:1px solid var(--line); border-radius:20px; padding:26px; background:var(--bg-alt);
+  box-shadow:0 14px 34px rgba(0,0,0,.3);
+  transition:transform .4s cubic-bezier(.16,1,.3,1), border-color .3s, background .3s, box-shadow .4s;
+}
+.review-card:hover{transform:translateY(-6px); border-color:rgba(245,245,245,.32); background:var(--bg-alt2); box-shadow:0 22px 54px rgba(0,0,0,.45);}
+.review-card .stars{color:var(--gold); font-size:.9rem; margin-bottom:14px; letter-spacing:2px;}
+.review-card p{color:var(--muted); font-size:.94rem; line-height:1.6; margin-bottom:16px; font-style:italic;}
+.review-card cite{font-style:normal; font-size:.8rem; color:var(--muted-dim); font-weight:600;}
+
+.reviews-eyebrow{margin-bottom:26px;}
+.justeat-note{
+  margin-top:28px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  border:1.5px solid rgba(255,138,61,.28); border-radius:18px; padding:24px 26px;
+  background:rgba(255,138,61,.05); backdrop-filter:blur(8px);
+  transition:transform .35s cubic-bezier(.16,1,.3,1), border-color .3s, background .3s, box-shadow .35s;
+}
+.justeat-note:hover{transform:translateY(-3px); border-color:rgba(255,138,61,.5); background:rgba(255,138,61,.08); box-shadow:0 14px 30px rgba(0,0,0,.3);}
+.justeat-note-icon{flex:none; width:48px; height:48px; border-radius:50%; background:rgba(255,138,61,.14); display:flex; align-items:center; justify-content:center; color:#ff8a3d;}
+.justeat-note-icon svg{width:22px; height:22px;}
+.justeat-note-body{flex:1 1 260px;}
+.justeat-note-title{font-weight:700; color:var(--ink); font-size:1rem; margin-bottom:4px;}
+.justeat-note-text{color:var(--muted); font-size:.86rem; line-height:1.55;}
+.justeat-note .btn{flex:none;}
+
+.cta-band{background:var(--bg); border-top:1px solid var(--line); text-align:center; position:relative; overflow:hidden;}
+.cta-band::before{content:""; position:absolute; top:-140px; left:50%; width:640px; height:340px; transform:translateX(-50%); background:radial-gradient(ellipse at center, rgba(245,245,245,.07), transparent 70%); pointer-events:none; filter:blur(10px);}
+.cta-band .wrap{position:relative; z-index:1;}
+.cta-band h2{font-size:clamp(1.6rem,3.4vw,2.1rem); margin-bottom:16px; background:linear-gradient(180deg,#ffffff,#c9c9c9); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;}
+.cta-band p{color:var(--muted); max-width:44ch; margin:0 auto 26px; line-height:1.6;}
+.cta-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+footer{padding-block:36px; border-top:1px solid var(--line);}
+/* ---------- COOKIE BANNER ---------- */
+.cookie-banner{
+  position:fixed; left:16px; right:16px; bottom:16px; z-index:80; max-width:640px; margin:0 auto;
+  background:rgba(10,10,10,.94); backdrop-filter:blur(14px);
+  border:1px solid rgba(245,245,245,.16); border-radius:18px; padding:22px 24px;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+  display:flex; flex-direction:column; gap:14px;
+  transform:translateY(140%); opacity:0; pointer-events:none;
+  transition:transform .5s cubic-bezier(.16,1,.3,1), opacity .4s;
+}
+.cookie-banner.show{transform:translateY(0); opacity:1; pointer-events:auto;}
+.cookie-banner p{font-size:.85rem; color:var(--muted); line-height:1.55; margin:0;}
+.cookie-banner p a{color:var(--gold); text-decoration:underline;}
+.cookie-actions{display:flex; gap:10px; flex-wrap:wrap;}
+.cookie-btn{
+  flex:1; min-width:130px; text-align:center; padding:11px 18px; border-radius:999px;
+  font-weight:600; font-size:.82rem; cursor:pointer; text-decoration:none;
+  border:1.5px solid rgba(245,245,245,.5); background:transparent; color:var(--ink);
+  transition:transform .25s, border-color .25s, background .25s, color .25s;
+}
+.cookie-btn:hover{border-color:var(--gold); color:var(--gold); transform:translateY(-2px);}
+.cookie-btn.accept{background:var(--ember); border-color:var(--ember); color:var(--bg);}
+.cookie-btn.accept:hover{background:var(--ember-bright); color:var(--bg);}
+@media (max-width:480px){ .cookie-banner{left:10px; right:10px; bottom:10px; padding:18px;} }
+.cookie-manage{background:none; border:none; color:var(--muted-dim); text-decoration:underline; font-size:.78rem; cursor:pointer; padding:0; font-family:inherit;}
+
+.footer-row{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
+.footer-row p{color:var(--muted-dim); font-size:.8rem;}
+.footer-links{display:flex; gap:18px;}
+.footer-links a{color:var(--muted); text-decoration:none; font-size:.85rem;}
+.footer-links a:hover{color:var(--gold);}
+
+.sticky-call{position:fixed; right:18px; bottom:18px; z-index:60; background:var(--ember); color:var(--bg); width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; box-shadow:0 8px 24px rgba(0,0,0,.4); transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s; animation:call-pulse 3.2s ease-in-out infinite;}
+.sticky-call:hover{transform:scale(1.08); box-shadow:0 12px 30px rgba(0,0,0,.5);}
+.sticky-call svg{width:24px; height:24px;}
+@keyframes call-pulse{0%,100%{box-shadow:0 8px 24px rgba(0,0,0,.4), 0 0 0 0 rgba(245,245,245,.25);} 50%{box-shadow:0 8px 24px rgba(0,0,0,.4), 0 0 0 10px rgba(245,245,245,0);}}
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap">
+    <a class="logo" href="index.html"><img class="logo-icon" src="images/logo-icon.png" alt="" width="490" height="488"><img class="logo-word" src="images/logo-wordmark.png" alt="Bar Panineria Rocca" width="1397" height="135"></a>
+    <ul class="nav-links">
+      <li><a href="menu.html">Menù</a></li>
+      <li><a href="servizi.html">Servizi</a></li>
+      <li><a class="active" href="recensioni.html">Recensioni</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-banner">
+  <div class="wrap inner">
+    <div>
+      <p class="eyebrow reveal">Recensioni Google &amp; Just Eat</p>
+      <h1 class="reveal" style="transition-delay:.1s">Cosa dicono di noi</h1>
+      <p class="lede reveal" style="transition-delay:.2s">Persone vere, sedute ai nostri tavoli o servite a domicilio. Ecco le valutazioni reali lasciate su Google e su Just Eat.</p>
+      <a class="back-link reveal" style="transition-delay:.3s" href="index.html">← Torna alla home</a>
+    </div>
+    <div class="rating-stack">
+      <div class="rating-block reveal" data-dir="right" style="transition-delay:.15s">
+        <p class="platform-label">Google</p>
+        <div class="num" data-count="4.7">0,0</div>
+        <div class="stars">★★★★★</div>
+        <p class="sub">63 recensioni verificate su Google</p>
+      </div>
+      <div class="rating-block rating-block--justeat reveal" data-dir="right" style="transition-delay:.25s">
+        <p class="platform-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v9a3 3 0 0 0 6 0V2"/><path d="M9 2v20"/><path d="M17 2c-2 2-2 5-2 7s0 3 2 3 2-1 2-3-0-5-2-7Z"/><path d="M17 12v10"/></svg>
+          Just Eat
+        </p>
+        <div class="num" data-count="4.4">0,0</div>
+        <div class="stars">★★★★☆</div>
+        <p class="sub">450+ recensioni su Just Eat</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow reveal reviews-eyebrow">Dalle recensioni Google</p>
+    <div class="reviews-grid">
+      <div class="review-card reveal" style="--i:0">
+        <div class="stars">★★★★★</div>
+        <p>&ldquo;Persone meravigliose, simpatiche, cordiali, accoglienti... Mi sento a casa!&rdquo;</p>
+        <cite>Recensione Google</cite>
+      </div>
+      <div class="review-card reveal" style="--i:1">
+        <div class="stars">★★★★★</div>
+        <p>&ldquo;Panineria molto pulita, personale disponibile e cordiale, ho mangiato due ottimi panini con prodotti freschi e ben conditi, tornerò!&rdquo;</p>
+        <cite>Marcydes, Local Guide</cite>
+      </div>
+      <div class="review-card reveal" style="--i:2">
+        <div class="stars">★★★★★</div>
+        <p>&ldquo;Provate l'asporto e avrete a casa un pasto completo, ben servito, pulito e meticolosamente organizzato.&rdquo;</p>
+        <cite>Arianna Lo Cicero, Local Guide</cite>
+      </div>
+      <div class="review-card reveal" style="--i:3">
+        <div class="stars">★★★★★</div>
+        <p>&ldquo;Esteticamente il locale si presenta molto bene, con un'area esterna riparata, circondata da piante. Qualità prezzo eccellente, si mangia benissimo con un costo molto conveniente.&rdquo;</p>
+        <cite>Sergio Guaresi</cite>
+      </div>
+    </div>
+
+    <div class="justeat-note reveal">
+      <div class="justeat-note-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v9a3 3 0 0 0 6 0V2"/><path d="M9 2v20"/><path d="M17 2c-2 2-2 5-2 7s0 3 2 3 2-1 2-3-0-5-2-7Z"/><path d="M17 12v10"/></svg>
+      </div>
+      <div class="justeat-note-body">
+        <p class="justeat-note-title">4,4 ★ su Just Eat, oltre 450 recensioni</p>
+        <p class="justeat-note-text">Just Eat calcola il punteggio sugli ordini consegnati e non pubblica le recensioni scritte dei clienti: il voto qui sopra è quello reale mostrato sulla nostra scheda.</p>
+      </div>
+      <a class="btn btn-ghost" href="https://www.justeat.it/restaurants-panineria-rocca-palermo/reviews" target="_blank" rel="noopener">Vedi su Just Eat</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap reveal">
+    <h2>Vieni a scoprirlo di persona</h2>
+    <p>Dai un'occhiata al menù o leggi tutte le recensioni direttamente sulla scheda Google del locale.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="menu.html">Vedi il menù</a>
+      <a class="btn btn-ghost" href="https://share.google/3hbFKrwgh0ysZBuLL" target="_blank" rel="noopener">Tutte le recensioni su Google</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <p>© Bar Panineria Rocca · Corso Calatafimi 1006/C, Palermo · P.IVA 06579300820</p>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="cookie.html">Cookie Policy</a>
+      <button class="cookie-manage" id="manageCookiesBtn" type="button">Gestisci cookie</button>
+    </div>
+  </div>
+</footer>
+
+<a class="sticky-call" href="tel:0916685415" aria-label="Chiama Bar Panineria Rocca">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+</a>
+
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Preferenze cookie">
+  <p>Usiamo Google Fonts per i caratteri del sito e, solo se acconsenti, Google Maps e l'embed di Instagram per mostrarti la mappa e i reel direttamente qui (nella Home). Leggi la <a href="privacy.html">Privacy Policy</a> e la <a href="cookie.html">Cookie Policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn" id="cookieReject" type="button">Solo essenziali</button>
+    <button class="cookie-btn accept" id="cookieAccept" type="button">Accetta tutti</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY = 'rocca-cookie-consent';
+  var banner = document.getElementById('cookieBanner');
+  var stored = null;
+  try { stored = localStorage.getItem(KEY); } catch(e){}
+
+  function applyConsent(value){
+    try { localStorage.setItem(KEY, value); } catch(e){}
+    if(banner){ banner.classList.remove('show'); }
+  }
+
+  if(!stored && banner){
+    setTimeout(function(){ banner.classList.add('show'); }, 900);
+  }
+
+  var acceptBtn = document.getElementById('cookieAccept');
+  var rejectBtn = document.getElementById('cookieReject');
+  var manageBtn = document.getElementById('manageCookiesBtn');
+  if(acceptBtn){ acceptBtn.addEventListener('click', function(){ applyConsent('accepted'); }); }
+  if(rejectBtn){ rejectBtn.addEventListener('click', function(){ applyConsent('rejected'); }); }
+  if(manageBtn){ manageBtn.addEventListener('click', function(){ if(banner){ banner.classList.add('show'); } }); }
+})();
+</script>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var revealEls = document.querySelectorAll('.reveal');
+  if(reduce || !('IntersectionObserver' in window)){
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, {threshold:0.15});
+    revealEls.forEach(function(el){ io.observe(el); });
+  }
+
+  var counters = document.querySelectorAll('[data-count]');
+  function animateCount(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    if(reduce || isNaN(target)){ el.textContent = target.toFixed(1).replace('.', ','); return; }
+    var start = null, dur = 1400;
+    function step(ts){
+      if(!start){ start = ts; }
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * eased).toFixed(1).replace('.', ',');
+      if(p < 1){ requestAnimationFrame(step); }
+    }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window){
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ animateCount(entry.target); cio.unobserve(entry.target); }
+      });
+    }, {threshold:0.6});
+    counters.forEach(function(el){ cio.observe(el); });
+  } else {
+    counters.forEach(animateCount);
+  }
+})();
+</script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(reduce || !fine){ return; }
+
+
+  /* magnetic buttons */
+  function magnetic(el, strength, liftY){
+    el.addEventListener('mousemove', function(e){
+      var r = el.getBoundingClientRect();
+      var x = e.clientX - r.left - r.width/2;
+      var y = e.clientY - r.top - r.height/2;
+      el.style.transform = 'translate(' + (x*strength) + 'px,' + (y*strength + (liftY||0)) + 'px)';
+    });
+    el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
+  }
+  document.querySelectorAll('.btn').forEach(function(el){ magnetic(el, 0.25, -3); });
+  var call = document.querySelector('.sticky-call');
+  if(call){ magnetic(call, 0.3, 0); }
+
+  /* tilt on cards/images */
+  function tilt(el, max, extra){
+    el.addEventListener('mousemove', function(e){
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left)/r.width - 0.5;
+      var py = (e.clientY - r.top)/r.height - 0.5;
+      el.style.transform = 'perspective(800px) rotateX(' + (-py*max) + 'deg) rotateY(' + (px*max) + 'deg) ' + (extra||'');
+    });
+    el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
+  }
+  document.querySelectorAll('.plate').forEach(function(el){ tilt(el, 8, 'translateY(-6px)'); });
+  document.querySelectorAll('.service-card').forEach(function(el){ tilt(el, 6, 'translateY(-6px)'); });
+  document.querySelectorAll('.review-card').forEach(function(el){ tilt(el, 6, 'translateY(-6px)'); });
+  document.querySelectorAll('.about-visual').forEach(function(el){ tilt(el, 5, 'scale(1.015)'); });
+  document.querySelectorAll('.hero-card').forEach(function(el){ tilt(el, 6, ''); });
+  document.querySelectorAll('.map-frame').forEach(function(el){ tilt(el, 4, 'translateY(-4px)'); });
+})();
+</script>
+</body>
+</html>

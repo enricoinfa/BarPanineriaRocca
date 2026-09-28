@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il menù — Bar Panineria Rocca</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;800&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#000000; --bg-alt:#141414; --bg-alt2:#1c1c1c;
+  --ink:#f5f5f5; --muted:#b0b0b0; --muted-dim:#8a8a8a;
+  --ember:#f5f5f5; --ember-bright:#dcdcdc; --gold:#d4d4d4;
+  --line:rgba(245,245,245,.14);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:'Work Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased;}
+.wrap{max-width:1100px; margin:0 auto; padding-inline:24px;}
+img{max-width:100%;}
+h1,h2,h3{font-family:'Libre Franklin', system-ui, sans-serif; font-weight:800; text-transform:uppercase; text-wrap:balance; margin:0;}
+p{margin:0;}
+a{color:inherit;}
+.eyebrow{font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+.eyebrow::before{content:""; width:24px; height:1px; background:var(--gold);}
+
+/* NAV */
+.nav{position:sticky; top:0; z-index:50; background:rgba(10,10,10,.82); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+.nav .wrap{display:flex; align-items:center; justify-content:space-between; padding-block:14px; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px; text-decoration:none; transition:opacity .25s ease;}
+.logo:hover{opacity:.82;}
+.logo img.logo-icon{height:36px; width:auto; display:block; transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.logo:hover img.logo-icon{transform:rotate(-8deg) scale(1.06);}
+.logo img.logo-word{height:16px; width:auto; display:block;}
+.nav-links{display:flex; gap:24px; list-style:none; margin:0; padding:0; flex-wrap:wrap; justify-content:flex-end;}
+.nav-links a{position:relative; font-size:.85rem; color:var(--muted); text-decoration:none; transition:color .25s;}
+.nav-links a::after{content:""; position:absolute; left:0; right:100%; bottom:-4px; height:1px; background:var(--gold); transition:right .35s cubic-bezier(.16,1,.3,1);}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after, .nav-links a.active::after{right:0;}
+.nav-links a.active{color:var(--gold); font-weight:600;}
+@media (max-width:520px){ .nav-links{gap:12px;} .nav-links a{font-size:.72rem;} .logo img.logo-icon{height:28px;} .logo img.logo-word{height:12px;} }
+
+/* PAGE BANNER */
+.page-banner{position:relative; overflow:hidden; isolation:isolate; padding-block:72px 56px; border-bottom:1px solid var(--line); min-height:420px; display:flex; align-items:center;}
+.banner-bg{position:absolute; inset:0; z-index:-2; background:#0a0a0a;}
+.banner-bg img, .banner-bg video{width:100%; height:100%; object-fit:cover; object-position:right center; display:block;}
+.page-banner::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:
+    linear-gradient(100deg, rgba(4,4,4,.94) 0%, rgba(4,4,4,.85) 38%, rgba(4,4,4,.55) 55%, rgba(4,4,4,.18) 78%, transparent 100%),
+    radial-gradient(circle at 5% 100%, rgba(245,245,245,.04), transparent 50%);
+}
+.page-banner .inner{position:relative; max-width:520px; margin:0; padding-left:clamp(24px, 6vw, 56px); padding-right:24px;}
+.page-banner h1{font-size:clamp(2.2rem,5.2vw,3.4rem); margin-bottom:14px; text-shadow:0 2px 20px rgba(0,0,0,.4);}
+.page-banner p.lede{color:var(--muted); font-size:1.02rem; max-width:48ch; line-height:1.6;}
+.back-link{display:inline-flex; align-items:center; gap:6px; font-size:.82rem; color:var(--muted-dim); text-decoration:none; margin-top:22px;}
+.back-link:hover{color:var(--gold);}
+
+/* REVEAL */
+.reveal{
+  opacity:0; transform:translateY(26px);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+  transition-delay:calc(var(--i,0) * .09s);
+}
+.reveal.in-view{opacity:1; transform:translateY(0);}
+.reveal[data-dir="left"]{transform:translateX(-36px);}
+.reveal[data-dir="left"].in-view{transform:translateX(0);}
+.reveal[data-dir="right"]{transform:translateX(36px);}
+.reveal[data-dir="right"].in-view{transform:translateX(0);}
+@media (prefers-reduced-motion: reduce){ .reveal, .reveal[data-dir]{opacity:1; transform:none; transition-delay:0s;} }
+
+section{padding-block:72px;}
+.section-head{display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:36px; flex-wrap:wrap;}
+.section-head h2{font-size:clamp(1.7rem,3.6vw,2.3rem);}
+.section-head p{color:var(--muted); max-width:40ch; font-size:.92rem; line-height:1.55;}
+
+.btn{display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:.88rem; letter-spacing:.03em; text-decoration:none; padding:15px 28px; border-radius:12px; position:relative; overflow:hidden; isolation:isolate; transition:transform .35s cubic-bezier(.16,1,.3,1), background .3s, box-shadow .35s, border-color .3s, color .3s;}
+.btn-primary{background:linear-gradient(180deg,#ffffff,#dcdcdc); color:#0a0a0a; box-shadow:0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.7);}
+.btn-primary::after{content:""; position:absolute; inset:0; background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.65) 48%, transparent 66%); transform:translateX(-120%); transition:transform .7s ease;}
+.btn-primary:hover{background:linear-gradient(180deg,#ffffff,#f2f2f2); transform:translateY(-3px); box-shadow:0 16px 34px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.85);}
+.btn-primary:hover::after{transform:translateX(120%);}
+.btn-ghost{background:rgba(245,245,245,.05); backdrop-filter:blur(8px); border:1.5px solid rgba(245,245,245,.24); color:var(--ink);}
+.btn-ghost:hover{background:rgba(245,245,245,.09); border-color:rgba(245,245,245,.55); color:#fff; transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,.35);}
+@media (prefers-reduced-motion: reduce){ .btn-primary::after{display:none;} }
+
+/* MENU */
+#menu{position:relative; overflow:hidden;}
+#menu > .wrap{position:relative; z-index:1;}
+.menu-bg{position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+.menu-bg-set{position:absolute; inset:0; opacity:0; transition:opacity .5s ease;}
+.menu-bg-set.active{opacity:1;}
+.menu-bg-set svg{
+  position:absolute; color:var(--ink); opacity:var(--o,.16);
+  top:var(--t); left:var(--l); width:var(--s); height:var(--s);
+  transform:rotate(var(--r,0deg));
+  animation:menu-icon-float var(--dur,13s) ease-in-out infinite;
+  animation-delay:var(--delay,0s);
+}
+@keyframes menu-icon-float{
+  0%{transform:translate(0,0) rotate(var(--r,0deg));}
+  25%{transform:translate(12px,-30px) rotate(calc(var(--r,0deg) + 8deg));}
+  50%{transform:translate(-8px,-52px) rotate(calc(var(--r,0deg) + 18deg));}
+  75%{transform:translate(-16px,-24px) rotate(calc(var(--r,0deg) - 6deg));}
+  100%{transform:translate(0,0) rotate(var(--r,0deg));}
+}
+@media (prefers-reduced-motion: reduce){ .menu-bg-set svg{animation:none;} }
+@media (max-width:700px){ .menu-bg{display:none;} }
+.menu-tabs{display:flex; gap:10px; margin-bottom:34px; flex-wrap:wrap; position:relative;}
+.tab-indicator{position:absolute; top:0; left:0; height:0; width:0; background:var(--ember); border-radius:999px; z-index:0; pointer-events:none; opacity:0; transition:transform .45s cubic-bezier(.16,1,.3,1), width .45s cubic-bezier(.16,1,.3,1), opacity .3s;}
+.tab-indicator.ready{opacity:1;}
+.menu-tab{position:relative; z-index:1; background:transparent; border:1px solid var(--line); color:var(--muted); font-family:'Work Sans'; font-weight:600; font-size:.85rem; padding:10px 20px; border-radius:999px; cursor:pointer; transition:all .25s cubic-bezier(.16,1,.3,1);}
+.menu-tab:hover{border-color:var(--gold); color:var(--ink); transform:translateY(-2px);}
+.menu-tab[aria-selected="true"]{background:var(--ember); border-color:var(--ember); color:var(--bg);}
+.menu-tab[aria-selected="true"]:hover{transform:none;}
+.menu-panel{display:none;}
+.menu-panel.active{display:block; animation:panel-in .5s cubic-bezier(.16,1,.3,1);}
+@keyframes panel-in{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);}}
+@media (prefers-reduced-motion: reduce){ .menu-panel.active{animation:none;} }
+.menu-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 40px;}
+@media (max-width:700px){ .menu-grid{grid-template-columns:1fr;} }
+.menu-item{display:flex; justify-content:space-between; gap:14px; align-items:baseline; padding-block:16px; padding-inline:0 4px; border-bottom:1px dashed var(--line); transition:padding-inline .3s cubic-bezier(.16,1,.3,1), border-color .3s;}
+.menu-item:hover{padding-inline:8px 4px; border-color:rgba(245,245,245,.32);}
+.menu-item .name{font-weight:600; font-size:1rem; color:var(--ink);}
+.menu-item .desc{display:block; color:var(--muted-dim); font-size:.8rem; margin-top:4px; font-weight:400;}
+.menu-item .price{font-family:'Libre Franklin'; font-weight:800; color:var(--gold); font-size:1.05rem; white-space:nowrap; transition:color .3s;}
+.menu-item:hover .price{color:var(--ink);}
+.menu-note{margin-top:36px; padding:20px 22px; border:1px solid var(--line); border-radius:16px; color:var(--muted); font-size:.9rem; line-height:1.6; background:var(--bg-alt); box-shadow:0 12px 30px rgba(0,0,0,.3);}
+.menu-note a{color:var(--gold); text-decoration:underline;}
+.menu-subhead{font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin:28px 0 6px; padding-top:18px; border-top:1px solid var(--line);}
+.menu-subhead:first-child{margin-top:0; padding-top:0; border-top:none;}
+.menu-subhead span{color:var(--muted-dim); text-transform:none; letter-spacing:0; font-size:.9em; margin-left:4px;}
+
+.cta-band{background:var(--bg); border-top:1px solid var(--line); text-align:center; position:relative; overflow:hidden;}
+.cta-band::before{content:""; position:absolute; top:-140px; left:50%; width:640px; height:340px; transform:translateX(-50%); background:radial-gradient(ellipse at center, rgba(245,245,245,.07), transparent 70%); pointer-events:none; filter:blur(10px);}
+.cta-band .wrap{position:relative; z-index:1;}
+.cta-band h2{font-size:clamp(1.6rem,3.4vw,2.1rem); margin-bottom:16px; background:linear-gradient(180deg,#ffffff,#c9c9c9); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;}
+.cta-band p{color:var(--muted); max-width:44ch; margin:0 auto 26px; line-height:1.6;}
+.cta-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+footer{padding-block:36px; border-top:1px solid var(--line);}
+/* ---------- COOKIE BANNER ---------- */
+.cookie-banner{
+  position:fixed; left:16px; right:16px; bottom:16px; z-index:80; max-width:640px; margin:0 auto;
+  background:rgba(10,10,10,.94); backdrop-filter:blur(14px);
+  border:1px solid rgba(245,245,245,.16); border-radius:18px; padding:22px 24px;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+  display:flex; flex-direction:column; gap:14px;
+  transform:translateY(140%); opacity:0; pointer-events:none;
+  transition:transform .5s cubic-bezier(.16,1,.3,1), opacity .4s;
+}
+.cookie-banner.show{transform:translateY(0); opacity:1; pointer-events:auto;}
+.cookie-banner p{font-size:.85rem; color:var(--muted); line-height:1.55; margin:0;}
+.cookie-banner p a{color:var(--gold); text-decoration:underline;}
+.cookie-actions{display:flex; gap:10px; flex-wrap:wrap;}
+.cookie-btn{
+  flex:1; min-width:130px; text-align:center; padding:11px 18px; border-radius:999px;
+  font-weight:600; font-size:.82rem; cursor:pointer; text-decoration:none;
+  border:1.5px solid rgba(245,245,245,.5); background:transparent; color:var(--ink);
+  transition:transform .25s, border-color .25s, background .25s, color .25s;
+}
+.cookie-btn:hover{border-color:var(--gold); color:var(--gold); transform:translateY(-2px);}
+.cookie-btn.accept{background:var(--ember); border-color:var(--ember); color:var(--bg);}
+.cookie-btn.accept:hover{background:var(--ember-bright); color:var(--bg);}
+@media (max-width:480px){ .cookie-banner{left:10px; right:10px; bottom:10px; padding:18px;} }
+.cookie-manage{background:none; border:none; color:var(--muted-dim); text-decoration:underline; font-size:.78rem; cursor:pointer; padding:0; font-family:inherit;}
+
+.footer-row{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
+.footer-row p{color:var(--muted-dim); font-size:.8rem;}
+.footer-links{display:flex; gap:18px;}
+.footer-links a{color:var(--muted); text-decoration:none; font-size:.85rem;}
+.footer-links a:hover{color:var(--gold);}
+
+.sticky-call{position:fixed; right:18px; bottom:18px; z-index:60; background:var(--ember); color:var(--bg); width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; box-shadow:0 8px 24px rgba(0,0,0,.4); transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s; animation:call-pulse 3.2s ease-in-out infinite;}
+.sticky-call:hover{transform:scale(1.08); box-shadow:0 12px 30px rgba(0,0,0,.5);}
+.sticky-call svg{width:24px; height:24px;}
+@keyframes call-pulse{0%,100%{box-shadow:0 8px 24px rgba(0,0,0,.4), 0 0 0 0 rgba(245,245,245,.25);} 50%{box-shadow:0 8px 24px rgba(0,0,0,.4), 0 0 0 10px rgba(245,245,245,0);}}
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap">
+    <a class="logo" href="index.html"><img class="logo-icon" src="images/logo-icon.png" alt="" width="490" height="488"><img class="logo-word" src="images/logo-wordmark.png" alt="Bar Panineria Rocca" width="1397" height="135"></a>
+    <ul class="nav-links">
+      <li><a class="active" href="menu.html">Menù</a></li>
+      <li><a href="servizi.html">Servizi</a></li>
+      <li><a href="recensioni.html">Recensioni</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-banner">
+  <div class="banner-bg">
+    <video autoplay muted loop playsinline preload="auto" poster="images/menu-banner-burger.jpg" width="1584" height="672" aria-label="Doppio cheeseburger con bacon, cheddar filante, insalata e cipolla rossa, su sfondo nero">
+      <source src="images/menu-banner-burger.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="wrap inner">
+    <h1 class="reveal" style="transition-delay:.05s">Il menù</h1>
+    <p class="lede reveal" style="transition-delay:.2s">Panineria d'asporto e servizi a domicilio: panini, hamburger, piatti caldi, insalate, piadine e bibite. Il menù completo, categoria per categoria.</p>
+    <a class="back-link reveal" style="transition-delay:.35s" href="index.html">← Torna alla home</a>
+  </div>
+</header>
+
+<section id="menu">
+  <div class="menu-bg" aria-hidden="true">
+    <div class="menu-bg-set active" data-set="classici">
+    <svg viewBox="0 0 60 34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <path d="M4 20C4 11 12 7 30 7C48 7 56 11 56 20C56 26 48 28 30 28C12 28 4 26 4 20Z"/>
+      <path d="M17 11L13 23"/>
+      <path d="M30 9L26 25"/>
+      <path d="M43 11L39 23"/>
+    </svg>
+    <svg viewBox="0 0 60 34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <path d="M4 20C4 11 12 7 30 7C48 7 56 11 56 20C56 26 48 28 30 28C12 28 4 26 4 20Z"/>
+      <path d="M17 11L13 23"/>
+      <path d="M30 9L26 25"/>
+      <path d="M43 11L39 23"/>
+    </svg>
+    <svg viewBox="0 0 60 34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <path d="M4 20C4 11 12 7 30 7C48 7 56 11 56 20C56 26 48 28 30 28C12 28 4 26 4 20Z"/>
+      <path d="M17 11L13 23"/>
+      <path d="M30 9L26 25"/>
+      <path d="M43 11L39 23"/>
+    </svg>
+    <svg viewBox="0 0 60 34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <path d="M4 20C4 11 12 7 30 7C48 7 56 11 56 20C56 26 48 28 30 28C12 28 4 26 4 20Z"/>
+      <path d="M17 11L13 23"/>
+      <path d="M30 9L26 25"/>
+      <path d="M43 11L39 23"/>
+    </svg>
+    <svg viewBox="0 0 60 34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <path d="M4 20C4 11 12 7 30 7C48 7 56 11 56 20C56 26 48 28 30 28C12 28 4 26 4 20Z"/>
+      <path d="M17 11L13 23"/>
+      <path d="M30 9L26 25"/>
+      <path d="M43 11L39 23"/>
+    </svg>
+    <svg viewBox="0 0 60 34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <path d="M4 20C4 11 12 7 30 7C48 7 56 11 56 20C56 26 48 28 30 28C12 28 4 26 4 20Z"/>
+      <path d="M17 11L13 23"/>
+      <path d="M30 9L26 25"/>
+      <path d="M43 11L39 23"/>
+    </svg>
+    </div>
+    <div class="menu-bg-set" data-set="speciali">
+    <svg viewBox="0 0 60 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <path d="M4 20C4 9 14 4 30 4C46 4 56 9 56 20"/>
+      <circle cx="22" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="30" cy="7" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="38" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <path d="M4 24H56"/>
+      <path d="M4 30Q9 25 14 30T24 30T34 30T44 30T54 30"/>
+      <path d="M4 36Q4 42 12 42H48Q56 42 56 36"/>
+    </svg>
+    <svg viewBox="0 0 60 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <path d="M4 20C4 9 14 4 30 4C46 4 56 9 56 20"/>
+      <circle cx="22" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="30" cy="7" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="38" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <path d="M4 24H56"/>
+      <path d="M4 30Q9 25 14 30T24 30T34 30T44 30T54 30"/>
+      <path d="M4 36Q4 42 12 42H48Q56 42 56 36"/>
+    </svg>
+    <svg viewBox="0 0 60 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <path d="M4 20C4 9 14 4 30 4C46 4 56 9 56 20"/>
+      <circle cx="22" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="30" cy="7" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="38" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <path d="M4 24H56"/>
+      <path d="M4 30Q9 25 14 30T24 30T34 30T44 30T54 30"/>
+      <path d="M4 36Q4 42 12 42H48Q56 42 56 36"/>
+    </svg>
+    <svg viewBox="0 0 60 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <path d="M4 20C4 9 14 4 30 4C46 4 56 9 56 20"/>
+      <circle cx="22" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="30" cy="7" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="38" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <path d="M4 24H56"/>
+      <path d="M4 30Q9 25 14 30T24 30T34 30T44 30T54 30"/>
+      <path d="M4 36Q4 42 12 42H48Q56 42 56 36"/>
+    </svg>
+    <svg viewBox="0 0 60 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <path d="M4 20C4 9 14 4 30 4C46 4 56 9 56 20"/>
+      <circle cx="22" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="30" cy="7" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="38" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <path d="M4 24H56"/>
+      <path d="M4 30Q9 25 14 30T24 30T34 30T44 30T54 30"/>
+      <path d="M4 36Q4 42 12 42H48Q56 42 56 36"/>
+    </svg>
+    <svg viewBox="0 0 60 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <path d="M4 20C4 9 14 4 30 4C46 4 56 9 56 20"/>
+      <circle cx="22" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="30" cy="7" r="1.4" fill="currentColor" stroke="none"/>
+      <circle cx="38" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+      <path d="M4 24H56"/>
+      <path d="M4 30Q9 25 14 30T24 30T34 30T44 30T54 30"/>
+      <path d="M4 36Q4 42 12 42H48Q56 42 56 36"/>
+    </svg>
+    </div>
+    <div class="menu-bg-set" data-set="capricci">
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <path d="M12 44L10 18H34L32 44Z"/>
+      <path d="M14 18L13 4"/>
+      <path d="M20 18L19.5 2"/>
+      <path d="M26 18L26.5 2"/>
+      <path d="M32 18L33 4"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <path d="M12 44L10 18H34L32 44Z"/>
+      <path d="M14 18L13 4"/>
+      <path d="M20 18L19.5 2"/>
+      <path d="M26 18L26.5 2"/>
+      <path d="M32 18L33 4"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <path d="M12 44L10 18H34L32 44Z"/>
+      <path d="M14 18L13 4"/>
+      <path d="M20 18L19.5 2"/>
+      <path d="M26 18L26.5 2"/>
+      <path d="M32 18L33 4"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <path d="M12 44L10 18H34L32 44Z"/>
+      <path d="M14 18L13 4"/>
+      <path d="M20 18L19.5 2"/>
+      <path d="M26 18L26.5 2"/>
+      <path d="M32 18L33 4"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <path d="M12 44L10 18H34L32 44Z"/>
+      <path d="M14 18L13 4"/>
+      <path d="M20 18L19.5 2"/>
+      <path d="M26 18L26.5 2"/>
+      <path d="M32 18L33 4"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <path d="M12 44L10 18H34L32 44Z"/>
+      <path d="M14 18L13 4"/>
+      <path d="M20 18L19.5 2"/>
+      <path d="M26 18L26.5 2"/>
+      <path d="M32 18L33 4"/>
+    </svg>
+    </div>
+    <div class="menu-bg-set" data-set="piatti">
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <ellipse cx="22" cy="34" rx="16" ry="5"/>
+      <ellipse cx="22" cy="34" rx="9" ry="2.6"/>
+      <path d="M14 20Q17 14 14 8"/>
+      <path d="M22 20Q25 14 22 8"/>
+      <path d="M30 20Q33 14 30 8"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <ellipse cx="22" cy="34" rx="16" ry="5"/>
+      <ellipse cx="22" cy="34" rx="9" ry="2.6"/>
+      <path d="M14 20Q17 14 14 8"/>
+      <path d="M22 20Q25 14 22 8"/>
+      <path d="M30 20Q33 14 30 8"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <ellipse cx="22" cy="34" rx="16" ry="5"/>
+      <ellipse cx="22" cy="34" rx="9" ry="2.6"/>
+      <path d="M14 20Q17 14 14 8"/>
+      <path d="M22 20Q25 14 22 8"/>
+      <path d="M30 20Q33 14 30 8"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <ellipse cx="22" cy="34" rx="16" ry="5"/>
+      <ellipse cx="22" cy="34" rx="9" ry="2.6"/>
+      <path d="M14 20Q17 14 14 8"/>
+      <path d="M22 20Q25 14 22 8"/>
+      <path d="M30 20Q33 14 30 8"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <ellipse cx="22" cy="34" rx="16" ry="5"/>
+      <ellipse cx="22" cy="34" rx="9" ry="2.6"/>
+      <path d="M14 20Q17 14 14 8"/>
+      <path d="M22 20Q25 14 22 8"/>
+      <path d="M30 20Q33 14 30 8"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <ellipse cx="22" cy="34" rx="16" ry="5"/>
+      <ellipse cx="22" cy="34" rx="9" ry="2.6"/>
+      <path d="M14 20Q17 14 14 8"/>
+      <path d="M22 20Q25 14 22 8"/>
+      <path d="M30 20Q33 14 30 8"/>
+    </svg>
+    </div>
+    <div class="menu-bg-set" data-set="insalate">
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <path d="M6 20Q6 34 22 34Q38 34 38 20"/>
+      <ellipse cx="22" cy="20" rx="16" ry="3"/>
+      <path d="M14 20C14 16 18 14 20 16"/>
+      <path d="M28 20C28 15 24 13 22 16"/>
+      <circle cx="22" cy="22" r="2" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <path d="M6 20Q6 34 22 34Q38 34 38 20"/>
+      <ellipse cx="22" cy="20" rx="16" ry="3"/>
+      <path d="M14 20C14 16 18 14 20 16"/>
+      <path d="M28 20C28 15 24 13 22 16"/>
+      <circle cx="22" cy="22" r="2" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <path d="M6 20Q6 34 22 34Q38 34 38 20"/>
+      <ellipse cx="22" cy="20" rx="16" ry="3"/>
+      <path d="M14 20C14 16 18 14 20 16"/>
+      <path d="M28 20C28 15 24 13 22 16"/>
+      <circle cx="22" cy="22" r="2" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <path d="M6 20Q6 34 22 34Q38 34 38 20"/>
+      <ellipse cx="22" cy="20" rx="16" ry="3"/>
+      <path d="M14 20C14 16 18 14 20 16"/>
+      <path d="M28 20C28 15 24 13 22 16"/>
+      <circle cx="22" cy="22" r="2" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <path d="M6 20Q6 34 22 34Q38 34 38 20"/>
+      <ellipse cx="22" cy="20" rx="16" ry="3"/>
+      <path d="M14 20C14 16 18 14 20 16"/>
+      <path d="M28 20C28 15 24 13 22 16"/>
+      <circle cx="22" cy="22" r="2" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <path d="M6 20Q6 34 22 34Q38 34 38 20"/>
+      <ellipse cx="22" cy="20" rx="16" ry="3"/>
+      <path d="M14 20C14 16 18 14 20 16"/>
+      <path d="M28 20C28 15 24 13 22 16"/>
+      <circle cx="22" cy="22" r="2" fill="currentColor" stroke="none"/>
+    </svg>
+    </div>
+    <div class="menu-bg-set" data-set="toast">
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <rect x="6" y="10" width="32" height="24" rx="4"/>
+      <path d="M6 18H38"/>
+      <path d="M6 26H38"/>
+      <path d="M15 10V34"/>
+      <path d="M23 10V34"/>
+      <path d="M31 10V34"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <rect x="6" y="10" width="32" height="24" rx="4"/>
+      <path d="M6 18H38"/>
+      <path d="M6 26H38"/>
+      <path d="M15 10V34"/>
+      <path d="M23 10V34"/>
+      <path d="M31 10V34"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <rect x="6" y="10" width="32" height="24" rx="4"/>
+      <path d="M6 18H38"/>
+      <path d="M6 26H38"/>
+      <path d="M15 10V34"/>
+      <path d="M23 10V34"/>
+      <path d="M31 10V34"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <rect x="6" y="10" width="32" height="24" rx="4"/>
+      <path d="M6 18H38"/>
+      <path d="M6 26H38"/>
+      <path d="M15 10V34"/>
+      <path d="M23 10V34"/>
+      <path d="M31 10V34"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <rect x="6" y="10" width="32" height="24" rx="4"/>
+      <path d="M6 18H38"/>
+      <path d="M6 26H38"/>
+      <path d="M15 10V34"/>
+      <path d="M23 10V34"/>
+      <path d="M31 10V34"/>
+    </svg>
+    <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <rect x="6" y="10" width="32" height="24" rx="4"/>
+      <path d="M6 18H38"/>
+      <path d="M6 26H38"/>
+      <path d="M15 10V34"/>
+      <path d="M23 10V34"/>
+      <path d="M31 10V34"/>
+    </svg>
+    </div>
+    <div class="menu-bg-set" data-set="piadine">
+    <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <path d="M4 15C4 9 8 5 14 5H30C36 5 40 9 40 15C40 21 36 25 30 25H14C8 25 4 21 4 15Z"/>
+      <path d="M10 6Q14 15 10 24"/>
+      <path d="M34 6Q30 15 34 24"/>
+      <circle cx="19" cy="15" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="25" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="24" cy="19" r="1.3" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <path d="M4 15C4 9 8 5 14 5H30C36 5 40 9 40 15C40 21 36 25 30 25H14C8 25 4 21 4 15Z"/>
+      <path d="M10 6Q14 15 10 24"/>
+      <path d="M34 6Q30 15 34 24"/>
+      <circle cx="19" cy="15" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="25" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="24" cy="19" r="1.3" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <path d="M4 15C4 9 8 5 14 5H30C36 5 40 9 40 15C40 21 36 25 30 25H14C8 25 4 21 4 15Z"/>
+      <path d="M10 6Q14 15 10 24"/>
+      <path d="M34 6Q30 15 34 24"/>
+      <circle cx="19" cy="15" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="25" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="24" cy="19" r="1.3" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <path d="M4 15C4 9 8 5 14 5H30C36 5 40 9 40 15C40 21 36 25 30 25H14C8 25 4 21 4 15Z"/>
+      <path d="M10 6Q14 15 10 24"/>
+      <path d="M34 6Q30 15 34 24"/>
+      <circle cx="19" cy="15" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="25" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="24" cy="19" r="1.3" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <path d="M4 15C4 9 8 5 14 5H30C36 5 40 9 40 15C40 21 36 25 30 25H14C8 25 4 21 4 15Z"/>
+      <path d="M10 6Q14 15 10 24"/>
+      <path d="M34 6Q30 15 34 24"/>
+      <circle cx="19" cy="15" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="25" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="24" cy="19" r="1.3" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <path d="M4 15C4 9 8 5 14 5H30C36 5 40 9 40 15C40 21 36 25 30 25H14C8 25 4 21 4 15Z"/>
+      <path d="M10 6Q14 15 10 24"/>
+      <path d="M34 6Q30 15 34 24"/>
+      <circle cx="19" cy="15" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="25" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+      <circle cx="24" cy="19" r="1.3" fill="currentColor" stroke="none"/>
+    </svg>
+    </div>
+    <div class="menu-bg-set" data-set="bere">
+    <svg viewBox="0 0 24 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:8%; --l:6%; --s:64px; --r:-10deg; --o:.18; --dur:13s; --delay:0s;">
+      <path d="M10 1H14V9C14 9 18 13 18 19V39C18 41.5 15.5 43 12 43C8.5 43 6 41.5 6 39V19C6 13 10 9 10 9Z"/>
+      <rect x="9" y="0" width="6" height="3" rx="1"/>
+      <rect x="7" y="23" width="10" height="9"/>
+    </svg>
+    <svg viewBox="0 0 24 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:58%; --l:16%; --s:48px; --r:12deg; --o:.14; --dur:10s; --delay:2.2s;">
+      <path d="M10 1H14V9C14 9 18 13 18 19V39C18 41.5 15.5 43 12 43C8.5 43 6 41.5 6 39V19C6 13 10 9 10 9Z"/>
+      <rect x="9" y="0" width="6" height="3" rx="1"/>
+      <rect x="7" y="23" width="10" height="9"/>
+    </svg>
+    <svg viewBox="0 0 24 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:18%; --l:46%; --s:56px; --r:6deg; --o:.16; --dur:15s; --delay:1s;">
+      <path d="M10 1H14V9C14 9 18 13 18 19V39C18 41.5 15.5 43 12 43C8.5 43 6 41.5 6 39V19C6 13 10 9 10 9Z"/>
+      <rect x="9" y="0" width="6" height="3" rx="1"/>
+      <rect x="7" y="23" width="10" height="9"/>
+    </svg>
+    <svg viewBox="0 0 24 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:72%; --l:58%; --s:52px; --r:-8deg; --o:.15; --dur:11s; --delay:0.6s;">
+      <path d="M10 1H14V9C14 9 18 13 18 19V39C18 41.5 15.5 43 12 43C8.5 43 6 41.5 6 39V19C6 13 10 9 10 9Z"/>
+      <rect x="9" y="0" width="6" height="3" rx="1"/>
+      <rect x="7" y="23" width="10" height="9"/>
+    </svg>
+    <svg viewBox="0 0 24 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:38%; --l:78%; --s:60px; --r:14deg; --o:.17; --dur:14s; --delay:3s;">
+      <path d="M10 1H14V9C14 9 18 13 18 19V39C18 41.5 15.5 43 12 43C8.5 43 6 41.5 6 39V19C6 13 10 9 10 9Z"/>
+      <rect x="9" y="0" width="6" height="3" rx="1"/>
+      <rect x="7" y="23" width="10" height="9"/>
+    </svg>
+    <svg viewBox="0 0 24 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="--t:4%; --l:72%; --s:44px; --r:4deg; --o:.13; --dur:9s; --delay:1.8s;">
+      <path d="M10 1H14V9C14 9 18 13 18 19V39C18 41.5 15.5 43 12 43C8.5 43 6 41.5 6 39V19C6 13 10 9 10 9Z"/>
+      <rect x="9" y="0" width="6" height="3" rx="1"/>
+      <rect x="7" y="23" width="10" height="9"/>
+    </svg>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="menu-tabs reveal" role="tablist">
+      <span class="tab-indicator" id="tabIndicator" aria-hidden="true"></span>
+      <button class="menu-tab" role="tab" aria-selected="true" data-target="classici">Panini Classici</button>
+      <button class="menu-tab" role="tab" aria-selected="false" data-target="speciali">Panini Speciali</button>
+      <button class="menu-tab" role="tab" aria-selected="false" data-target="capricci">I Capricci</button>
+      <button class="menu-tab" role="tab" aria-selected="false" data-target="piatti">Piatti Caldi</button>
+      <button class="menu-tab" role="tab" aria-selected="false" data-target="insalate">Le Insalate</button>
+      <button class="menu-tab" role="tab" aria-selected="false" data-target="toast">Toast Maxi</button>
+      <button class="menu-tab" role="tab" aria-selected="false" data-target="piadine">Le Piadine</button>
+      <button class="menu-tab" role="tab" aria-selected="false" data-target="bere">Bibite</button>
+    </div>
+
+    <div class="menu-panel active reveal" id="classici">
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Panelle</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Crocchè</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Panelle e Crocchè</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Topolino</span><span class="desc">würstel, prosciutto cotto, mozzarella</span></div><span class="price">3,50€</span></div>
+        <div class="menu-item"><div><span class="name">Cartoccio</span><span class="desc">prosciutto cotto, mozzarella</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Hot Dog</span><span class="desc">würstel e salsa</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Caprese</span><span class="desc">pomodoro, mozzarella, olio, sale e pepe</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Patatino Semplice</span><span class="desc">patatine e salsa</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Patatino Completo</span><span class="desc">patatine, würstel e salsa</span></div><span class="price">3,50€</span></div>
+        <div class="menu-item"><div><span class="name">Crudo</span><span class="desc">prosciutto crudo e mozzarella</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Primavera</span><span class="desc">prosciutto cotto, mozzarella, pomodoro, lattuga</span></div><span class="price">3,50€</span></div>
+        <div class="menu-item"><div><span class="name">Bresaola</span><span class="desc">bresaola, grana e rucola</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Fesa</span><span class="desc">fesa di tacchino, limone, olio, sale e pepe</span></div><span class="price">3,50€</span></div>
+        <div class="menu-item"><div><span class="name">Mortadella</span><span class="desc">mortadella e limone</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Fish</span><span class="desc">tonno, pomodoro, olio, sale e pepe</span></div><span class="price">4,00€</span></div>
+        <div class="menu-item"><div><span class="name">Napoli</span><span class="desc">salame ed emmenthal</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Porchetta</span><span class="desc">porchetta grigliata e limone</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Chicken</span><span class="desc">pollo arrosto, pomodoro e maionese</span></div><span class="price">3,50€</span></div>
+        <div class="menu-item"><div><span class="name">Spinacino</span><span class="desc">spinacino di pollo fritto, lattuga, sottilette e maionese</span></div><span class="price">4,00€</span></div>
+        <div class="menu-item"><div><span class="name">Sasizza</span><span class="desc">salsiccia, cipolla, cheddar e BBQ</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Pollo Fritto</span><span class="desc">pollo fritto, patatine e salsa rosa</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Affumicato</span><span class="desc">salame piccante, anelli di cipolla, scamorza affumicata, funghi e BBQ</span></div><span class="price">5,00€</span></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="speciali">
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Burger di Pollo</span><span class="desc">croccante hamburger di pollo, lattuga, pomodoro, cheddar e salsa hamburger</span></div><span class="price">6,50€</span></div>
+        <div class="menu-item"><div><span class="name">Hamburger</span><span class="desc">carne bovina, cheddar, lattuga, pomodoro e salsa hamburger</span></div><span class="price">6,50€</span></div>
+        <div class="menu-item"><div><span class="name">Hamburger Classico</span><span class="desc">carne bovina, cheddar, bacon croccante e salsa hamburger</span></div><span class="price">6,50€</span></div>
+        <div class="menu-item"><div><span class="name">Cetty</span><span class="desc">carne bovina, cheddar, uovo fritto, bacon croccante e BBQ</span></div><span class="price">7,00€</span></div>
+        <div class="menu-item"><div><span class="name">Pippo</span><span class="desc">carne bovina, salame piccante, emmenthal, anelli di cipolla e salsa dolce piccante</span></div><span class="price">7,00€</span></div>
+        <div class="menu-item"><div><span class="name">Marco</span><span class="desc">carne bovina, cheddar, anelli di cipolla e salsa hamburger</span></div><span class="price">7,00€</span></div>
+        <div class="menu-item"><div><span class="name">Laura</span><span class="desc">carne bovina, pomodoro, lattuga, patatine e salsa hamburger</span></div><span class="price">7,00€</span></div>
+        <div class="menu-item"><div><span class="name">Daniele</span><span class="desc">carne bovina, doppia sottiletta, anelli di cipolla e salsa hamburger</span></div><span class="price">7,00€</span></div>
+        <div class="menu-item"><div><span class="name">Burger Pork</span><span class="desc">hamburger di salsiccia, scamorza affumicata, lattuga, cipolla fritta e salsa BBQ</span></div><span class="price">8,00€</span></div>
+        <div class="menu-item"><div><span class="name">Crazy Burger</span><span class="desc">carne bovina, emmenthal, porchetta arrostita, lattuga, anelli di cipolla e salsa BBQ</span></div><span class="price">8,00€</span></div>
+        <div class="menu-item"><div><span class="name">Pistacchioso</span><span class="desc">carne bovina, scamorza affumicata, colata di pistacchio e mortadella</span></div><span class="price">9,00€</span></div>
+        <div class="menu-item"><div><span class="name">Maxi Rocca</span><span class="desc">doppio hamburger di carne bovina, doppio cheddar, bacon croccante e salsa hamburger</span></div><span class="price">8,50€</span></div>
+        <div class="menu-item"><div><span class="name">Maxi Marco</span><span class="desc">doppio hamburger di carne bovina, doppio cheddar, triplo bacon croccante, anelli di cipolla e salsa hamburger</span></div><span class="price">9,00€</span></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="capricci">
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Patatine</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Patatine, Bacon Croccante e Cheddar</span></div><span class="price">6,00€</span></div>
+        <div class="menu-item"><div><span class="name">Patatine, Bacon Croccante, Mozzarella e Crema di Pistacchio di Bronte</span></div><span class="price">8,00€</span></div>
+        <div class="menu-item"><div><span class="name">Anelli di Cipolla</span><span class="desc">12 pezzi</span></div><span class="price">4,00€</span></div>
+        <div class="menu-item"><div><span class="name">Alette di Pollo</span><span class="desc">6 pezzi</span></div><span class="price">4,00€</span></div>
+        <div class="menu-item"><div><span class="name">Mozzarella Stick</span><span class="desc">6 pezzi</span></div><span class="price">4,00€</span></div>
+        <div class="menu-item"><div><span class="name">Nuggets</span><span class="desc">6 pezzi</span></div><span class="price">4,00€</span></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="piatti">
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Piatto n°1</span><span class="desc">patatine, anelli di cipolla, panelle e crocchè</span></div><span class="price">8,00€</span></div>
+        <div class="menu-item"><div><span class="name">Piatto n°2</span><span class="desc">alette di pollo, nuggets di pollo, mozzarella stick, patatine</span></div><span class="price">8,00€</span></div>
+        <div class="menu-item"><div><span class="name">Piatto n°3</span><span class="desc">salsiccia, hamburger, patatine, pane tostato</span></div><span class="price">10,00€</span></div>
+        <div class="menu-item"><div><span class="name">Piatto n°4</span><span class="desc">pollo arrosto, patatine, insalata di pomodoro e pane tostato</span></div><span class="price">10,00€</span></div>
+        <div class="menu-item"><div><span class="name">Piatto n°5</span><span class="desc">uovo fritto, bacon croccante e toast maxi prosciutto e sottiletta</span></div><span class="price">6,00€</span></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="insalate">
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Insalata n°1</span><span class="desc">lattuga, mozzarella, pomodoro e mais</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Insalata n°2</span><span class="desc">lattuga, mozzarella, pomodoro e tonno</span></div><span class="price">6,00€</span></div>
+        <div class="menu-item"><div><span class="name">Insalata n°3</span><span class="desc">lattuga, mozzarella, pomodoro e pollo arrosto</span></div><span class="price">7,00€</span></div>
+        <div class="menu-item"><div><span class="name">Insalata n°4</span><span class="desc">lattuga, mozzarella, pomodoro e fesa di tacchino</span></div><span class="price">7,00€</span></div>
+        <div class="menu-item"><div><span class="name">Insalata n°5</span><span class="desc">lattuga, pomodoro, mozzarella e bresaola</span></div><span class="price">8,00€</span></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="toast">
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Toast Classico</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Toast Crudo</span><span class="desc">prosciutto crudo e sottiletta</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Toast Speciale</span><span class="desc">petto di pollo arrosto, cheddar, lattuga e maionese</span></div><span class="price">5,00€</span></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="piadine">
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Piadina Classica</span><span class="desc">prosciutto cotto, pomodoro, lattuga e mozzarella</span></div><span class="price">4,00€</span></div>
+        <div class="menu-item"><div><span class="name">Piadina Crudo</span><span class="desc">prosciutto crudo, mozzarella, olio, sale e pepe</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Piadina Bresaola</span><span class="desc">bresaola, scaglie di grana, rucola, olio e pepe</span></div><span class="price">5,00€</span></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="bere">
+      <p class="menu-subhead">Bibite</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Acqua 50cl</span></div><span class="price">1,00€</span></div>
+        <div class="menu-item"><div><span class="name">Acqua 1,5Lt</span></div><span class="price">1,50€</span></div>
+        <div class="menu-item"><div><span class="name">Coca Cola 33cl</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Coca Cola 1,5Lt</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Fanta 33cl</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Sprite 33cl</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Chinotto 33cl</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Succhi di Frutta 20cl</span><span class="desc">vari gusti</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Schweppes Tonica/Limone 18cl</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Tè Pesca/Limone 50cl</span></div><span class="price">2,00€</span></div>
+        <div class="menu-item"><div><span class="name">Red Bull 25cl</span></div><span class="price">3,00€</span></div>
+      </div>
+      <p class="menu-subhead">Birre <span>+18</span></p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Moretti 33cl</span></div><span class="price">1,50€</span></div>
+        <div class="menu-item"><div><span class="name">Moretti 66cl</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Beck's 33cl</span></div><span class="price">1,50€</span></div>
+        <div class="menu-item"><div><span class="name">Beck's 66cl</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Ceres Bionda 33cl</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Tennent's 33cl</span></div><span class="price">2,50€</span></div>
+        <div class="menu-item"><div><span class="name">Corona 33cl</span></div><span class="price">3,00€</span></div>
+      </div>
+      <p class="menu-subhead">Altro</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Amaro</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Whisky</span></div><span class="price">5,00€</span></div>
+        <div class="menu-item"><div><span class="name">Limoncello</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Caffè</span></div><span class="price">1,20€</span></div>
+      </div>
+      <p class="menu-subhead">Vini <span>+18</span></p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><span class="name">Giada Principe di Corleone, 75cl</span></div><span class="price">8,00€</span></div>
+        <div class="menu-item"><div><span class="name">Calice di Vino Principe di Corleone</span></div><span class="price">3,00€</span></div>
+        <div class="menu-item"><div><span class="name">Corvo Rosso 2018, 75cl</span></div><span class="price">8,00€</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="cta-band">
+  <div class="wrap reveal">
+    <h2>Ti abbiamo fatto venire fame?</h2>
+    <p>Ordina ora o vieni a trovarci nel nostro locale.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="index.html#ordina">Ordina ora</a>
+      <a class="btn btn-ghost" href="index.html#dove">Dove siamo</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <p>© Bar Panineria Rocca · Corso Calatafimi 1006/C, Palermo · P.IVA 06579300820</p>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="cookie.html">Cookie Policy</a>
+      <button class="cookie-manage" id="manageCookiesBtn" type="button">Gestisci cookie</button>
+    </div>
+  </div>
+</footer>
+
+<a class="sticky-call" href="tel:0916685415" aria-label="Chiama Bar Panineria Rocca">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+</a>
+
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Preferenze cookie">
+  <p>Usiamo Google Fonts per i caratteri del sito e, solo se acconsenti, Google Maps e l'embed di Instagram per mostrarti la mappa e i reel direttamente qui (nella Home). Leggi la <a href="privacy.html">Privacy Policy</a> e la <a href="cookie.html">Cookie Policy</a>.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn" id="cookieReject" type="button">Solo essenziali</button>
+    <button class="cookie-btn accept" id="cookieAccept" type="button">Accetta tutti</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY = 'rocca-cookie-consent';
+  var banner = document.getElementById('cookieBanner');
+  var stored = null;
+  try { stored = localStorage.getItem(KEY); } catch(e){}
+
+  function applyConsent(value){
+    try { localStorage.setItem(KEY, value); } catch(e){}
+    if(banner){ banner.classList.remove('show'); }
+  }
+
+  if(!stored && banner){
+    setTimeout(function(){ banner.classList.add('show'); }, 900);
+  }
+
+  var acceptBtn = document.getElementById('cookieAccept');
+  var rejectBtn = document.getElementById('cookieReject');
+  var manageBtn = document.getElementById('manageCookiesBtn');
+  if(acceptBtn){ acceptBtn.addEventListener('click', function(){ applyConsent('accepted'); }); }
+  if(rejectBtn){ rejectBtn.addEventListener('click', function(){ applyConsent('rejected'); }); }
+  if(manageBtn){ manageBtn.addEventListener('click', function(){ if(banner){ banner.classList.add('show'); } }); }
+})();
+</script>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.menu-tab');
+  var indicator = document.getElementById('tabIndicator');
+  var tabsWrap = document.querySelector('.menu-tabs');
+
+  function moveIndicator(tab, animate){
+    if(!indicator || !tab || !tabsWrap){ return; }
+    var tr = tab.getBoundingClientRect();
+    var wr = tabsWrap.getBoundingClientRect();
+    var x = tr.left - wr.left;
+    var y = tr.top - wr.top;
+    if(!animate){ indicator.style.transition = 'none'; }
+    indicator.style.width = tr.width + 'px';
+    indicator.style.height = tr.height + 'px';
+    indicator.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+    indicator.classList.add('ready');
+    if(!animate){
+      requestAnimationFrame(function(){ indicator.style.transition = ''; });
+    }
+  }
+
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.setAttribute('aria-selected','false'); });
+      tab.setAttribute('aria-selected','true');
+      moveIndicator(tab, true);
+      document.querySelectorAll('.menu-panel').forEach(function(p){ p.classList.remove('active'); });
+      var target = document.getElementById(tab.getAttribute('data-target'));
+      if(target){ target.classList.add('active'); }
+      document.querySelectorAll('.menu-bg-set').forEach(function(s){ s.classList.remove('active'); });
+      var bgSet = document.querySelector('.menu-bg-set[data-set="' + tab.getAttribute('data-target') + '"]');
+      if(bgSet){ bgSet.classList.add('active'); }
+    });
+  });
+
+  var activeTab = document.querySelector('.menu-tab[aria-selected="true"]') || tabs[0];
+  if(activeTab){ moveIndicator(activeTab, false); }
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      var current = document.querySelector('.menu-tab[aria-selected="true"]');
+      if(current){ moveIndicator(current, false); }
+    }, 150);
+  });
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var revealEls = document.querySelectorAll('.reveal');
+  if(reduce || !('IntersectionObserver' in window)){
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, {threshold:0.15});
+    revealEls.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(reduce || !fine){ return; }
+
+
+  /* magnetic buttons */
+  function magnetic(el, strength, liftY){
+    el.addEventListener('mousemove', function(e){
+      var r = el.getBoundingClientRect();
+      var x = e.clientX - r.left - r.width/2;
+      var y = e.clientY - r.top - r.height/2;
+      el.style.transform = 'translate(' + (x*strength) + 'px,' + (y*strength + (liftY||0)) + 'px)';
+    });
+    el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
+  }
+  document.querySelectorAll('.btn').forEach(function(el){ magnetic(el, 0.25, -3); });
+  var call = document.querySelector('.sticky-call');
+  if(call){ magnetic(call, 0.3, 0); }
+
+  /* tilt on cards/images */
+  function tilt(el, max, extra){
+    el.addEventListener('mousemove', function(e){
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left)/r.width - 0.5;
+      var py = (e.clientY - r.top)/r.height - 0.5;
+      el.style.transform = 'perspective(800px) rotateX(' + (-py*max) + 'deg) rotateY(' + (px*max) + 'deg) ' + (extra||'');
+    });
+    el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
+  }
+  document.querySelectorAll('.plate').forEach(function(el){ tilt(el, 8, 'translateY(-6px)'); });
+  document.querySelectorAll('.service-card').forEach(function(el){ tilt(el, 6, 'translateY(-6px)'); });
+  document.querySelectorAll('.review-card').forEach(function(el){ tilt(el, 6, 'translateY(-6px)'); });
+  document.querySelectorAll('.about-visual').forEach(function(el){ tilt(el, 5, 'scale(1.015)'); });
+  document.querySelectorAll('.hero-card').forEach(function(el){ tilt(el, 6, ''); });
+  document.querySelectorAll('.map-frame').forEach(function(el){ tilt(el, 4, 'translateY(-4px)'); });
+})();
+</script>
+</body>
+</html>
