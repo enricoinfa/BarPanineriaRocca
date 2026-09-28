@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
 <title>Bar Panineria Rocca</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;800&family=Work+Sans:wght@400;500;600;700&display=swap');
@@ -207,7 +208,30 @@ a{color:inherit;}
 .hero-card--justeat .num{font-size:1.9rem;}
 .hero-card--justeat .stars{color:#ff8a3d;}
 .hero-card--justeat .rating-sub{margin-bottom:0;}
-@media (max-width:860px){ .hero{min-height:0;} }
+@media (max-width:860px){
+  .hero{min-height:0; padding-block:0 40px;}
+  .hero-bg, .hero-grain{display:none;}
+  .hero::before{display:none;}
+  .hero-photo-zone{
+    position:relative;
+    margin-inline:-24px;
+    padding:88px 24px 30px;
+    background-image:url("hero-panino.jpg");
+    background-size:cover;
+    background-position:center 72%;
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .hero-photo-zone::before{
+    content:"";
+    position:absolute; inset:0; z-index:0; pointer-events:none;
+    background:
+      linear-gradient(180deg, rgba(6,6,6,.42) 0%, rgba(6,6,6,.58) 55%, rgba(6,6,6,.88) 100%),
+      linear-gradient(100deg, rgba(4,4,4,.6) 0%, transparent 60%);
+  }
+  .hero-photo-zone > *{position:relative; z-index:1;}
+  .hero-photo-zone .hero-ctas{margin-bottom:0;}
+}
 
 /* ---------- REVEAL ---------- */
 .reveal{
@@ -536,12 +560,27 @@ section{padding-block:88px;}
 .reel-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:44px;}
 @media (max-width:900px){ .reel-grid{grid-template-columns:1fr; max-width:420px; margin-inline:auto;} }
 .reel-card{
-  border-radius:20px; overflow:hidden; border:1px solid var(--line); background:var(--bg-alt);
-  box-shadow:0 14px 34px rgba(0,0,0,.3); min-height:420px;
+  position:relative; border-radius:20px; overflow:hidden; border:1px solid var(--line); background:var(--bg-alt);
+  box-shadow:0 14px 34px rgba(0,0,0,.3); aspect-ratio:9/16;
   transition:transform .35s cubic-bezier(.16,1,.3,1), border-color .3s, box-shadow .3s;
+  --ig-crop-top:58px; --ig-crop-bottom:150px;
 }
 .reel-card:hover{transform:translateY(-4px); border-color:rgba(245,245,245,.32); box-shadow:0 22px 54px rgba(0,0,0,.45);}
-.reel-card iframe{width:100% !important;}
+/* Crop trick: Instagram's official embed always includes its header (profile/follow)
+   and footer (like/comment/share + caption). We can't reach inside the embed's iframe
+   (different domain) to remove those pieces, so instead we shift the whole iframe up to
+   hide the header behind the card's edge, and force extra height so the footer/caption
+   also falls below the visible area, which is clipped by overflow:hidden on .reel-card.
+   The header/footer heights are Instagram's own, not exact, so this is an approximation:
+   if a reel has a long caption or a longer username, the crop may need retouching
+   (adjust --ig-crop-top / --ig-crop-bottom on .reel-card) or slightly show a caption line. */
+.reel-card iframe{
+  position:absolute !important; left:0 !important;
+  top:calc(-1 * var(--ig-crop-top, 58px)) !important;
+  width:100% !important;
+  height:calc(100% + var(--ig-crop-top, 58px) + var(--ig-crop-bottom, 150px)) !important;
+  border:0 !important;
+}
 .reel-card blockquote.instagram-media{margin:0 !important; width:100% !important; min-width:0 !important; background:var(--bg-alt) !important; border:0 !important;}
 .reel-placeholder{
   grid-column:1 / -1; text-align:center; padding:40px 24px; border-radius:20px;
@@ -621,11 +660,13 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
   <div class="hero-grain"></div>
   <div class="wrap hero-inner">
     <div>
-      <h1 class="reveal" style="transition-delay:.05s">Morso dopo morso,<br><em>ne vuoi ancora.</em></h1>
-      <div class="hero-ctas reveal" style="transition-delay:.35s">
-        <a class="btn btn-primary" href="#ordina">Ordina ora</a>
-        <a class="btn btn-ghost" href="menu.html">Vedi il menù</a>
-        <a class="btn btn-ghost" href="servizi.html">I nostri servizi</a>
+      <div class="hero-photo-zone">
+        <h1 class="reveal" style="transition-delay:.05s">Morso dopo morso,<br><em>ne vuoi ancora.</em></h1>
+        <div class="hero-ctas reveal" style="transition-delay:.35s">
+          <a class="btn btn-primary" href="#ordina">Ordina ora</a>
+          <a class="btn btn-ghost" href="menu.html">Vedi il menù</a>
+          <a class="btn btn-ghost" href="servizi.html">I nostri servizi</a>
+        </div>
       </div>
       <div class="stat-strip reveal" style="transition-delay:.5s">
         <span><b>4,7 ★</b> su Google (63 recensioni)</span>
