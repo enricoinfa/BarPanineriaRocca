@@ -45,10 +45,23 @@ a{color:inherit;}
 .nav-links a:hover::after, .nav-links a.active::after{right:0;}
 .nav-links a.active{color:var(--gold); font-weight:600;}
 @media (max-width:600px){
-  .nav .wrap{justify-content:center;}
-  .nav-links{flex-basis:100%; justify-content:center; gap:18px;}
+  .nav .wrap{padding-inline:16px; gap:10px; flex-wrap:nowrap;}
+  .logo{gap:8px;}
+  .nav-links{gap:14px;}
+  .nav-links a{font-size:.76rem;}
+  .logo img.logo-icon{height:30px;}
+  .logo img.logo-word{height:13px;}
 }
-@media (max-width:520px){ .nav-links{gap:12px;} .nav-links a{font-size:.72rem;} .logo img.logo-icon{height:28px;} .logo img.logo-word{height:12px;} }
+@media (max-width:520px){
+  .nav-links{gap:10px;}
+  .nav-links a{font-size:.7rem;}
+  .logo img.logo-icon{height:26px;}
+  .logo img.logo-word{height:11px;}
+}
+@media (max-width:380px){
+  .nav-links{gap:7px;}
+  .nav-links a{font-size:.64rem;}
+}
 
 .page-banner{position:relative; overflow:hidden; padding-block:64px 48px; border-bottom:1px solid var(--line);}
 .page-banner::before{
@@ -62,17 +75,17 @@ a{color:inherit;}
 .back-link{display:inline-flex; align-items:center; gap:6px; font-size:.82rem; color:var(--muted-dim); text-decoration:none; margin-top:22px;}
 .back-link:hover{color:var(--gold);}
 
-.rating-stack{display:flex; flex-direction:column; gap:16px;}
-.rating-block{background:var(--bg-alt); border:1px solid var(--line); border-radius:20px; padding:26px; text-align:center; box-shadow:0 14px 34px rgba(0,0,0,.3); position:relative;}
-.rating-block .platform-label{font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-dim); margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:6px;}
-.rating-block .platform-label svg{width:13px; height:13px;}
-.rating-block .num{font-family:'Libre Franklin'; font-weight:800; font-size:3.2rem; color:var(--gold); line-height:1;}
-.rating-block .stars{color:var(--gold); letter-spacing:3px; font-size:1.1rem; margin-block:8px;}
-.rating-block .sub{color:var(--muted-dim); font-size:.82rem;}
-.rating-block--justeat{padding:20px 26px;}
+.rating-stack{display:flex; flex-direction:column; gap:12px;}
+.rating-block{background:var(--bg-alt); border:1px solid var(--line); border-radius:16px; padding:19px; text-align:center; box-shadow:0 14px 34px rgba(0,0,0,.3); position:relative;}
+.rating-block .platform-label{font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-dim); margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:6px;}
+.rating-block .platform-label svg{width:12px; height:12px;}
+.rating-block .num{font-family:'Libre Franklin'; font-weight:800; font-size:2.5rem; color:var(--gold); line-height:1;}
+.rating-block .stars{color:var(--gold); letter-spacing:3px; font-size:.95rem; margin-block:6px;}
+.rating-block .sub{color:var(--muted-dim); font-size:.74rem;}
+.rating-block--justeat{padding:15px 19px;}
 .rating-block--justeat .platform-label{color:#ff8a3d;}
-.rating-block--justeat .num{font-size:2.2rem;}
-.rating-block--justeat .stars{color:#ff8a3d; font-size:.95rem;}
+.rating-block--justeat .num{font-size:1.75rem;}
+.rating-block--justeat .stars{color:#ff8a3d; font-size:.82rem;}
 
 .reveal{
   opacity:0; transform:translateY(26px);
