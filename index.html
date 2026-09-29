@@ -489,13 +489,23 @@ section{padding-block:88px;}
 }
 @media (prefers-reduced-motion: reduce){ .pin-bg svg{animation:none;} }
 @media (max-width:700px){ .pin-bg{display:none;} }
-.contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:stretch;}
-@media (max-width:860px){ .contact-grid{grid-template-columns:1fr;} }
+.contact-grid{
+  display:grid; grid-template-columns:1fr 1fr; grid-template-areas:"addr map" "rest map";
+  gap:28px 48px; align-items:start;
+}
+.contact-addr{grid-area:addr;}
+.contact-map{grid-area:map; align-self:stretch;}
+.contact-rest{grid-area:rest;}
+@media (max-width:860px){
+  .contact-grid{grid-template-columns:1fr; grid-template-areas:"addr" "map" "rest";}
+}
 .contact-info dl{display:flex; flex-direction:column; gap:20px; margin:0 0 28px;}
 .contact-info dt{font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:4px;}
 .contact-info dd{margin:0; font-size:1.05rem; color:var(--ink);}
 .contact-info dd a{text-decoration:none; border-bottom:1px solid var(--line);}
 .hours-row{display:flex; justify-content:space-between; font-size:.85rem; color:var(--muted); padding-block:6px; border-bottom:1px dashed var(--line);}
+.contact-social .social-links{margin-top:0;}
+.contact-social .social-btn{padding:11px 20px; font-size:.82rem;}
 .map-frame{
   border-radius:22px; overflow:hidden; border:1px solid var(--line); min-height:320px;
   position:relative; background:var(--bg-alt);
@@ -621,6 +631,7 @@ section{padding-block:88px;}
 }
 .reel-placeholder p{color:var(--muted); font-size:.92rem; line-height:1.6; max-width:48ch; margin:0 auto 20px;}
 .reel-placeholder .cookie-actions{justify-content:center;}
+@media (max-width:700px){ .social{display:none;} }
 
 /* ---------- COOKIE BANNER ---------- */
 .cookie-banner{
@@ -1075,30 +1086,16 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
     </svg>
   </div>
   <div class="wrap contact-grid">
-    <div class="contact-info reveal" data-dir="left">
+    <div class="contact-info contact-addr reveal" data-dir="left">
       <p class="eyebrow">Dove siamo</p>
       <dl>
         <div>
           <dt>Indirizzo</dt>
           <dd><a href="https://www.google.com/maps/search/?api=1&query=Bar+Panineria+Rocca+Corso+Calatafimi+1006+Palermo" target="_blank" rel="noopener">Corso Calatafimi 1006/C, 90131 Palermo</a></dd>
         </div>
-        <div>
-          <dt>Telefono</dt>
-          <dd><a href="tel:0916685415">091 668 5415</a></dd>
-        </div>
       </dl>
-      <div style="margin-bottom:20px;">
-        <span class="eyebrow" style="margin-bottom:12px;">Orari bar</span>
-        <div class="hours-row"><span>Lun – Sab</span><span>05:00 – 17:00</span></div>
-        <div class="hours-row"><span>Domenica</span><span>Chiuso</span></div>
-      </div>
-      <div style="margin-bottom:10px;">
-        <span class="eyebrow" style="margin-bottom:12px;">Orari panineria</span>
-        <div class="hours-row"><span>Lun – Sab</span><span>12:00 – 15:00</span></div>
-        <div class="hours-row"><span>Domenica</span><span>Chiuso</span></div>
-      </div>
     </div>
-    <div class="map-frame reveal" data-dir="right">
+    <div class="map-frame contact-map reveal" data-dir="right">
       <iframe class="map-embed" data-src="https://maps.google.com/maps?q=Bar%20Panineria%20Rocca%20Corso%20Calatafimi%201006%20Palermo&z=16&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Bar Panineria Rocca"></iframe>
       <a class="map-open" href="https://www.google.com/maps/search/?api=1&query=Bar+Panineria+Rocca+Corso+Calatafimi+1006+Palermo" target="_blank" rel="noopener">
         <span class="map-pin">
@@ -1109,6 +1106,37 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
           <span>Apri in Google Maps →</span>
         </span>
       </a>
+    </div>
+    <div class="contact-info contact-rest reveal" data-dir="left">
+      <dl>
+        <div>
+          <dt>Telefono</dt>
+          <dd><a href="tel:0916685415">091 668 5415</a></dd>
+        </div>
+      </dl>
+      <div style="margin-bottom:20px;">
+        <span class="eyebrow" style="margin-bottom:12px;">Orari bar</span>
+        <div class="hours-row"><span>Lun – Sab</span><span>05:00 – 17:00</span></div>
+        <div class="hours-row"><span>Domenica</span><span>Chiuso</span></div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <span class="eyebrow" style="margin-bottom:12px;">Orari panineria</span>
+        <div class="hours-row"><span>Lun – Sab</span><span>12:00 – 15:00</span></div>
+        <div class="hours-row"><span>Domenica</span><span>Chiuso</span></div>
+      </div>
+      <div class="contact-social">
+        <span class="eyebrow" style="margin-bottom:12px;">Social</span>
+        <div class="social-links">
+          <a class="social-btn" href="https://www.instagram.com/barpanineriarocca/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.8"/><circle cx="17.4" cy="6.6" r=".8" fill="currentColor" stroke="none"/></svg>
+            Instagram
+          </a>
+          <a class="social-btn" href="https://www.facebook.com/people/Bar-Panineria-Rocca/100062921575134/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5h2.9l.6-3.5h-3.5V7.5c0-.83.67-1.5 1.5-1.5H15V3z"/></svg>
+            Facebook
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1136,17 +1164,7 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
   </div>
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Seguici per non perderti le novità</h2>
-    </div>
-    <div class="social-links reveal" style="transition-delay:.1s">
-      <a class="social-btn" href="https://www.instagram.com/barpanineriarocca/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.8"/><circle cx="17.4" cy="6.6" r=".8" fill="currentColor" stroke="none"/></svg>
-        Instagram
-      </a>
-      <a class="social-btn" href="https://www.facebook.com/people/Bar-Panineria-Rocca/100062921575134/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5h2.9l.6-3.5h-3.5V7.5c0-.83.67-1.5 1.5-1.5H15V3z"/></svg>
-        Facebook
-      </a>
+      <h2>Ultimi reel su Instagram</h2>
     </div>
     <div class="reel-grid" id="reelGrid">
       <div class="reel-placeholder" id="reelPlaceholder">
@@ -1196,6 +1214,7 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
   }
 
   function loadReels(){
+    if(window.matchMedia('(max-width:700px)').matches) return;
     var grid = document.getElementById('reelGrid');
     var placeholder = document.getElementById('reelPlaceholder');
     if(!grid || !placeholder) return;
