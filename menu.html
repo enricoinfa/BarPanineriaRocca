@@ -66,8 +66,21 @@ a{color:inherit;}
 
 /* PAGE BANNER */
 .page-banner{position:relative; overflow:hidden; isolation:isolate; padding-block:72px 56px; border-bottom:1px solid var(--line); min-height:420px; display:flex; align-items:center;}
-.banner-bg{position:absolute; inset:0; z-index:-2; background:#0a0a0a;}
-.banner-bg img, .banner-bg video{width:100%; height:100%; object-fit:cover; object-position:right center; display:block;}
+.banner-bg{
+  position:absolute; inset:0; z-index:-2; background:#0a0a0a;
+  opacity:0; filter:blur(14px) saturate(1.2);
+  animation:banner-bg-intro 1.3s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes banner-bg-intro{ to{opacity:1; filter:blur(0) saturate(1);} }
+.banner-bg img, .banner-bg video{
+  width:100%; height:100%; object-fit:cover; object-position:right center; display:block;
+  animation:banner-zoom 14s ease-in-out infinite alternate;
+}
+@keyframes banner-zoom{ from{transform:scale(1);} to{transform:scale(1.06);} }
+@media (prefers-reduced-motion: reduce){
+  .banner-bg{animation:none; opacity:1; filter:none;}
+  .banner-bg img, .banner-bg video{animation:none;}
+}
 .page-banner::before{
   content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
   background:
@@ -136,6 +149,20 @@ section{padding-block:72px;}
 .menu-tab:hover{border-color:var(--gold); color:var(--ink); transform:translateY(-2px);}
 .menu-tab[aria-selected="true"]{background:var(--ember); border-color:var(--ember); color:var(--bg);}
 .menu-tab[aria-selected="true"]:hover{transform:none;}
+.menu-select{display:none;}
+@media (max-width:700px){
+  .menu-tabs{display:none;}
+  .menu-select{
+    display:block; width:100%; margin-bottom:28px;
+    background:var(--bg-alt) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4d4d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center;
+    background-size:18px;
+    border:1px solid var(--line); border-radius:14px; color:var(--ink);
+    font-family:'Work Sans'; font-weight:600; font-size:.92rem;
+    padding:14px 44px 14px 18px; -webkit-appearance:none; appearance:none;
+    box-shadow:0 10px 26px rgba(0,0,0,.28);
+  }
+  .menu-select:focus{outline:none; border-color:var(--gold);}
+}
 .menu-panel{display:none;}
 .menu-panel.active{display:block; animation:panel-in .5s cubic-bezier(.16,1,.3,1);}
 @keyframes panel-in{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);}}
@@ -599,6 +626,16 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
       <button class="menu-tab" role="tab" aria-selected="false" data-target="piadine">Le Piadine</button>
       <button class="menu-tab" role="tab" aria-selected="false" data-target="bere">Bibite</button>
     </div>
+    <select class="menu-select" aria-label="Scegli categoria menù">
+      <option value="classici">Panini Classici</option>
+      <option value="speciali">Panini Speciali</option>
+      <option value="capricci">I Capricci</option>
+      <option value="piatti">Piatti Caldi</option>
+      <option value="insalate">Le Insalate</option>
+      <option value="toast">Toast Maxi</option>
+      <option value="piadine">Le Piadine</option>
+      <option value="bere">Bibite</option>
+    </select>
 
     <div class="menu-panel active reveal" id="classici">
       <div class="menu-grid">
@@ -800,6 +837,7 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
   var tabs = document.querySelectorAll('.menu-tab');
   var indicator = document.getElementById('tabIndicator');
   var tabsWrap = document.querySelector('.menu-tabs');
+  var select = document.querySelector('.menu-select');
 
   function moveIndicator(tab, animate){
     if(!indicator || !tab || !tabsWrap){ return; }
@@ -817,19 +855,30 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
     }
   }
 
+  function activateTarget(targetId, animateIndicator){
+    var tab = document.querySelector('.menu-tab[data-target="' + targetId + '"]');
+    tabs.forEach(function(t){ t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+    if(tab){ moveIndicator(tab, animateIndicator); }
+    document.querySelectorAll('.menu-panel').forEach(function(p){ p.classList.remove('active'); });
+    var target = document.getElementById(targetId);
+    if(target){ target.classList.add('active'); }
+    document.querySelectorAll('.menu-bg-set').forEach(function(s){ s.classList.remove('active'); });
+    var bgSet = document.querySelector('.menu-bg-set[data-set="' + targetId + '"]');
+    if(bgSet){ bgSet.classList.add('active'); }
+    if(select && select.value !== targetId){ select.value = targetId; }
+  }
+
   tabs.forEach(function(tab){
     tab.addEventListener('click', function(){
-      tabs.forEach(function(t){ t.setAttribute('aria-selected','false'); });
-      tab.setAttribute('aria-selected','true');
-      moveIndicator(tab, true);
-      document.querySelectorAll('.menu-panel').forEach(function(p){ p.classList.remove('active'); });
-      var target = document.getElementById(tab.getAttribute('data-target'));
-      if(target){ target.classList.add('active'); }
-      document.querySelectorAll('.menu-bg-set').forEach(function(s){ s.classList.remove('active'); });
-      var bgSet = document.querySelector('.menu-bg-set[data-set="' + tab.getAttribute('data-target') + '"]');
-      if(bgSet){ bgSet.classList.add('active'); }
+      activateTarget(tab.getAttribute('data-target'), true);
     });
   });
+
+  if(select){
+    select.addEventListener('change', function(){
+      activateTarget(select.value, false);
+    });
+  }
 
   var activeTab = document.querySelector('.menu-tab[aria-selected="true"]') || tabs[0];
   if(activeTab){ moveIndicator(activeTab, false); }
