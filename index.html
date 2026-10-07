@@ -117,15 +117,15 @@ a{color:inherit;}
 @keyframes hero-bg-intro{
   to{opacity:1; filter:blur(0) saturate(1);}
 }
-.hero-bg img{
-  width:100%; height:100%; object-fit:cover; object-position:center 72%; display:block;
+.hero-bg img, .hero-bg video{
+  width:100%; height:100%; object-fit:cover; object-position:center 60%; display:block;
   animation:hero-zoom 14s ease-in-out infinite alternate;
 }
 @keyframes hero-zoom{
   from{transform:scale(1);}
   to{transform:scale(1.06);}
 }
-@media (prefers-reduced-motion: reduce){ .hero-bg img{animation:none;} .hero-bg{animation:none; opacity:1; filter:none;} }
+@media (prefers-reduced-motion: reduce){ .hero-bg img, .hero-bg video{animation:none;} .hero-bg{animation:none; opacity:1; filter:none;} }
 
 /* ---------- NAV / HERO ENTRANCE ---------- */
 .nav{animation:nav-drop .7s cubic-bezier(.16,1,.3,1) both;}
@@ -699,7 +699,7 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
 
 <header class="hero" id="top">
   <div class="hero-bg">
-    <img src="images/hero-panino.jpg" alt="Panino gourmet con carne alla griglia, pomodoro, insalata e salsa, servito al Bar Panineria Rocca" width="1200" height="1600" loading="eager">
+    <video id="heroVideo" muted loop playsinline preload="none" poster="images/hero-video-poster.jpg" width="1920" height="1080" aria-label="Preparazione di un doppio cheeseburger con bacon e salsa cheddar sulla piastra del Bar Panineria Rocca"></video>
   </div>
   <div class="hero-grain"></div>
   <div class="wrap hero-inner">
@@ -1395,7 +1395,7 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
 
   /* subtle hero parallax on scroll */
   if(!reduce){
-    var heroImg = document.querySelector('.hero-bg img');
+    var heroImg = document.querySelector('.hero-bg video') || document.querySelector('.hero-bg img');
     if(heroImg){
       var ticking = false, animKilled = false;
       window.addEventListener('scroll', function(){
@@ -1412,6 +1412,26 @@ footer{padding-block:36px; border-top:1px solid var(--line);}
       }, {passive:true});
     }
   }
+})();
+</script>
+<script>
+/* Hero video: loaded only on wide screens (the mobile hero keeps the light photo)
+   and never for people who prefer reduced motion (they keep the poster frame). */
+(function(){
+  var v = document.getElementById('heroVideo');
+  if(!v){ return; }
+  var wide = window.matchMedia('(min-width:861px)').matches;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!wide || reduce){ return; }
+  var conn = navigator.connection || {};
+  if(conn.saveData){ return; }
+  var s = document.createElement('source');
+  s.src = (window.innerWidth <= 1400) ? 'images/hero-video-720.mp4' : 'images/hero-video.mp4';
+  s.type = 'video/mp4';
+  v.appendChild(s);
+  v.load();
+  var p = v.play();
+  if(p && p.catch){ p.catch(function(){}); }
 })();
 </script>
 <script>
